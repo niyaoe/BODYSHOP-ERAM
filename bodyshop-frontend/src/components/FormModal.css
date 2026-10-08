@@ -1,7 +1,10 @@
+/* =========================
+   MODAL OVERLAY
+========================= */
+
 .bs-form-modal-overlay {
   position: fixed;
   inset: 0;
-
   z-index: 1000;
 
   display: flex;
@@ -10,48 +13,51 @@
 
   padding: 20px;
 
-  background: rgba(15, 23, 42, 0.55);
-
-  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.6);
 }
+
+
+/* =========================
+   MODAL
+========================= */
 
 .bs-form-modal {
-  width: 100%;
-  max-width: 900px;
-  max-height: calc(100vh - 40px);
+  width: min(1280px, 96vw);
+  height: 90vh;
 
   background: #ffffff;
-
   border-radius: 14px;
 
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
 
-  overflow-y: auto;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .bs-form-modal-header {
-  position: sticky;
-  top: 0;
-  z-index: 5;
+  flex-shrink: 0;
 
-  padding: 20px 24px;
+  padding: 20px 28px;
 
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
 
   background: #ffffff;
-
   border-bottom: 1px solid #e5e7eb;
 }
 
 .bs-form-modal-title {
   margin: 0;
 
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 700;
 
   color: #111827;
@@ -61,22 +67,20 @@
   margin: 5px 0 0;
 
   font-size: 13px;
-
   color: #6b7280;
 }
 
 .bs-form-modal-close {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
 
   border: none;
   border-radius: 7px;
 
   background: #f3f4f6;
-
   color: #374151;
 
-  font-size: 23px;
+  font-size: 24px;
   line-height: 1;
 
   cursor: pointer;
@@ -87,15 +91,74 @@
 }
 
 
-/* FORM */
+/* =========================
+   ERROR
+========================= */
+
+.bs-form-modal-error {
+  flex-shrink: 0;
+
+  margin: 14px 28px 0;
+
+  padding: 11px 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   FORM
+========================= */
 
 .bs-form-modal-form {
-  padding: 24px;
+  flex: 1;
+
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
 }
+
+
+/* =========================
+   SCROLLABLE FORM CONTENT
+========================= */
 
 .bs-form-modal-section {
   margin-bottom: 28px;
 }
+
+.bs-form-modal-section:first-child {
+  padding-top: 24px;
+}
+
+.bs-form-modal-section {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+
+/* IMPORTANT:
+   Make the sections scrollable.
+*/
+
+.bs-form-modal-form {
+  overflow-y: auto;
+}
+
+
+/* =========================
+   SECTION TITLE
+========================= */
 
 .bs-form-modal-section-title {
   margin: 0 0 16px;
@@ -110,17 +173,31 @@
   color: #374151;
 }
 
+
+/* =========================
+   4 FIELDS PER ROW
+========================= */
+
 .bs-form-modal-grid {
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
 
-  gap: 17px;
+  gap: 18px 16px;
 }
 
+
+/* =========================
+   FIELD
+========================= */
+
 .bs-form-modal-field {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
+
   gap: 7px;
 }
 
@@ -161,52 +238,36 @@
 }
 
 
-/* ERROR */
-
-.bs-form-modal-error {
-  margin: 18px 24px 0;
-
-  padding: 12px 14px;
-
-  border: 1px solid #fecaca;
-  border-radius: 7px;
-
-  background: #fef2f2;
-
-  color: #b91c1c;
-
-  font-size: 13px;
-}
-
-.bs-form-modal-loading {
-  padding: 60px;
-
-  text-align: center;
-
-  color: #6b7280;
-
-  font-size: 14px;
-}
-
-
-/* ACTIONS */
+/* =========================
+   FIXED ACTION BUTTONS
+========================= */
 
 .bs-form-modal-actions {
-  padding-top: 20px;
+  flex-shrink: 0;
+
+  height: 72px;
+
+  padding: 16px 28px;
 
   display: flex;
+  align-items: center;
   justify-content: flex-end;
 
   gap: 10px;
 
+  background: #ffffff;
+
   border-top: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 -4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .bs-form-modal-cancel,
 .bs-form-modal-submit {
   height: 40px;
 
-  padding: 0 20px;
+  padding: 0 22px;
 
   border-radius: 7px;
 
@@ -220,7 +281,6 @@
   border: 1px solid #d1d5db;
 
   background: #ffffff;
-
   color: #374151;
 }
 
@@ -232,7 +292,6 @@
   border: 1px solid #2563eb;
 
   background: #2563eb;
-
   color: #ffffff;
 }
 
@@ -243,40 +302,109 @@
 .bs-form-modal-submit:disabled,
 .bs-form-modal-cancel:disabled {
   opacity: 0.6;
-
   cursor: not-allowed;
 }
 
 
-/* RESPONSIVE */
+/* =========================
+   LOADING
+========================= */
 
-@media (max-width: 700px) {
-  .bs-form-modal-overlay {
-    padding: 10px;
-  }
+.bs-form-modal-loading {
+  padding: 60px;
+
+  text-align: center;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   3 COLUMNS
+========================= */
+
+@media (max-width: 1100px) {
 
   .bs-form-modal {
-    max-height: calc(100vh - 20px);
+    width: 95vw;
+    height: 92vh;
   }
 
-  .bs-form-modal-form {
-    padding: 18px;
+  .bs-form-modal-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================
+   2 COLUMNS
+========================= */
+
+@media (max-width: 800px) {
+
+  .bs-form-modal {
+    width: 96vw;
+    height: 94vh;
+  }
+
+  .bs-form-modal-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
   }
 
   .bs-form-modal-header {
-    padding: 17px 18px;
+    padding: 18px 20px;
+  }
+
+  .bs-form-modal-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .bs-form-modal-actions {
+    padding: 14px 20px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 520px) {
+
+  .bs-form-modal-overlay {
+    padding: 8px;
+  }
+
+  .bs-form-modal {
+    width: 100%;
+    height: 96vh;
   }
 
   .bs-form-modal-grid {
     grid-template-columns: 1fr;
   }
 
-  .bs-form-modal-actions {
-    flex-direction: column-reverse;
+  .bs-form-modal-header {
+    padding: 16px;
   }
 
-  .bs-form-modal-cancel,
-  .bs-form-modal-submit {
-    width: 100%;
+  .bs-form-modal-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .bs-form-modal-actions {
+    padding: 12px 16px;
+  }
+
+  .bs-form-modal-actions button {
+    flex: 1;
   }
 }
+
+

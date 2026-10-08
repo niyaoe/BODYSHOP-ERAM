@@ -72,7 +72,8 @@ function Dashboard() {
       }
 
       const data = await getDashboard(params);
-
+      console.log(data);
+      
       setDashboardData(data);
     } catch (error) {
       setError(
@@ -392,12 +393,13 @@ function Dashboard() {
                     <tr>
                       <th>Sl No</th>
                       <th>RO Number</th>
+                      <th>RO Date</th>
                       <th>Customer</th>
                       <th>Registration</th>
                       <th>Model</th>
                       <th>Branch</th>
                       <th>Status</th>
-                      <th>RO Date</th>
+                      
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -410,6 +412,12 @@ function Dashboard() {
 
                           <td>{record.roNumber}</td>
 
+                          <td>
+                            {record.roDate
+                              ? new Date(record.roDate).toLocaleDateString()
+                              : "-"}
+                          </td>
+
                           <td>{record.customerName}</td>
 
                           <td>{record.regNo}</td>
@@ -420,11 +428,7 @@ function Dashboard() {
 
                           <td>{record.presentStatus?.name || "-"}</td>
 
-                          <td>
-                            {record.roDate
-                              ? new Date(record.roDate).toLocaleDateString()
-                              : "-"}
-                          </td>
+                          
                           <td>
                             <button
                               className="bs-dashboard-edit-button"

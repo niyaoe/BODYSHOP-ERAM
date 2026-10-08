@@ -249,7 +249,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                       name="branch"
                       value={form.branch}
                       onChange={handleChange}
-                      required
+                      // required
                     >
                       <option value="">Select Branch</option>
 
@@ -270,7 +270,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     name="yardEntryDate"
                     value={form.yardEntryDate}
                     onChange={handleChange}
-                    required
+                    // required
                   />
                 </div>
 
@@ -282,7 +282,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     name="roDate"
                     value={form.roDate}
                     onChange={handleChange}
-                    required
+                    // required
                   />
                 </div>
 
@@ -295,7 +295,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     value={form.roNumber}
                     onChange={handleChange}
                     placeholder="Enter RO number"
-                    required
+                    // required
                   />
                 </div>
 
@@ -308,7 +308,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     value={form.regNo}
                     onChange={handleChange}
                     placeholder="KL01AB1234"
-                    required
+                    // required
                   />
                 </div>
 
@@ -321,7 +321,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     value={form.model}
                     onChange={handleChange}
                     placeholder="Vehicle model"
-                    required
+                    // required
                   />
                 </div>
               </div>
@@ -343,7 +343,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     name="customerName"
                     value={form.customerName}
                     onChange={handleChange}
-                    required
+                    // required
                   />
                 </div>
 
@@ -357,7 +357,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     onChange={handleChange}
                     maxLength="10"
                     placeholder="10 digit number"
-                    required
+                    // required
                   />
                 </div>
 
@@ -369,7 +369,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     name="serviceAdvisor"
                     value={form.serviceAdvisor}
                     onChange={handleChange}
-                    required
+                    // required
                   />
                 </div>
               </div>
@@ -580,7 +580,7 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                     name="presentStatus"
                     value={form.presentStatus}
                     onChange={handleChange}
-                    required
+                    // required
                   >
                     <option value="">Select Status</option>
 
