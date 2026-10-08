@@ -137,6 +137,7 @@ const getDashboard = async (req, res) => {
     const records = await FormRecord.find(filter)
       .populate("branch", "name code")
       .populate("createdBy", "name email role")
+      .populate("presentStatus", "name section")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageLimit);

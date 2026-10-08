@@ -1,0 +1,674 @@
+.bs-dashboard-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #1f2937;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.bs-dashboard-header {
+  height: 72px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+.bs-dashboard-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.bs-dashboard-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.bs-dashboard-logout {
+  padding: 9px 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.bs-dashboard-logout:hover {
+  background: #f3f4f6;
+}
+
+
+/* =========================
+   TABS
+========================= */
+
+.bs-dashboard-tabs {
+  padding: 22px 32px 0;
+
+  display: flex;
+  gap: 8px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bs-dashboard-tab {
+  padding: 12px 22px;
+
+  border: none;
+  border-bottom: 3px solid transparent;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.bs-dashboard-tab:hover {
+  color: #111827;
+}
+
+.bs-dashboard-tab-active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.bs-dashboard-content {
+  padding: 28px 32px;
+  max-width: 1600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   SUMMARY CARDS
+========================= */
+
+.bs-dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.bs-dashboard-card {
+  min-height: 115px;
+
+  padding: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+.bs-dashboard-card-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.bs-dashboard-card-value {
+  font-size: 25px;
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* =========================
+   RECORDS
+========================= */
+
+.bs-dashboard-records {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.bs-dashboard-records-header {
+  min-height: 65px;
+  padding: 0 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  box-sizing: border-box;
+}
+
+.bs-dashboard-records-header h2 {
+  margin: 0;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.bs-dashboard-records-header span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.bs-dashboard-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.bs-dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  min-width: 950px;
+}
+
+.bs-dashboard-table thead {
+  background: #f9fafb;
+}
+
+.bs-dashboard-table th {
+  padding: 13px 16px;
+
+  text-align: left;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #6b7280;
+
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  white-space: nowrap;
+}
+
+.bs-dashboard-table td {
+  padding: 14px 16px;
+
+  font-size: 13px;
+
+  color: #374151;
+
+  border-bottom: 1px solid #f0f1f3;
+
+  white-space: nowrap;
+}
+
+.bs-dashboard-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.bs-dashboard-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.bs-dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.bs-dashboard-table td:nth-child(7) {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.bs-dashboard-loading {
+  padding: 50px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  text-align: center;
+
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.bs-dashboard-error {
+  padding: 14px 18px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.bs-dashboard-empty {
+  padding: 50px !important;
+
+  text-align: center !important;
+
+  color: #9ca3af !important;
+  font-size: 14px !important;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+  .bs-dashboard-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bs-dashboard-header {
+    height: auto;
+    min-height: 72px;
+
+    padding: 16px 18px;
+
+    gap: 15px;
+  }
+
+  .bs-dashboard-title {
+    font-size: 18px;
+  }
+
+  .bs-dashboard-tabs {
+    padding: 16px 18px 0;
+
+    overflow-x: auto;
+  }
+
+  .bs-dashboard-tab {
+    white-space: nowrap;
+    padding: 11px 16px;
+  }
+
+  .bs-dashboard-content {
+    padding: 20px 18px;
+  }
+
+  .bs-dashboard-summary {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .bs-dashboard-card {
+    min-height: 105px;
+    padding: 16px;
+  }
+
+  .bs-dashboard-card-value {
+    font-size: 21px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bs-dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .bs-dashboard-header {
+    align-items: flex-start;
+  }
+
+  .bs-dashboard-logout {
+    padding: 8px 13px;
+  }
+}
+
+
+
+/* =========================
+   USER AREA
+========================= */
+
+.bs-dashboard-user-area {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.bs-dashboard-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.bs-dashboard-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.bs-dashboard-user-role {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+
+/* =========================
+   FILTERS
+========================= */
+
+.bs-dashboard-filters {
+  margin-bottom: 24px;
+  padding: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.bs-dashboard-filter-field {
+  min-width: 160px;
+  flex: 1;
+}
+
+.bs-dashboard-search-field {
+  flex: 2;
+}
+
+.bs-dashboard-filter-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #4b5563;
+}
+
+.bs-dashboard-filter-input {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+  font-size: 13px;
+
+  outline: none;
+
+  box-sizing: border-box;
+}
+
+.bs-dashboard-filter-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.08);
+}
+
+.bs-dashboard-filter-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.bs-dashboard-apply-button,
+.bs-dashboard-clear-button {
+  height: 40px;
+
+  padding: 0 17px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.bs-dashboard-apply-button {
+  border: 1px solid #2563eb;
+
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.bs-dashboard-apply-button:hover {
+  background: #1d4ed8;
+}
+
+.bs-dashboard-clear-button {
+  border: 1px solid #d1d5db;
+
+  background: #ffffff;
+  color: #374151;
+}
+
+.bs-dashboard-clear-button:hover {
+  background: #f3f4f6;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.bs-dashboard-pagination {
+  min-height: 65px;
+
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.bs-dashboard-page-button {
+  padding: 8px 14px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.bs-dashboard-page-button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.bs-dashboard-page-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.bs-dashboard-page-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+
+/* =========================
+   RESPONSIVE FILTERS
+========================= */
+
+@media (max-width: 1000px) {
+  .bs-dashboard-filters {
+    flex-wrap: wrap;
+  }
+
+  .bs-dashboard-filter-field {
+    min-width: calc(50% - 10px);
+  }
+
+  .bs-dashboard-search-field {
+    flex: none;
+    width: 100%;
+  }
+
+  .bs-dashboard-filter-actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .bs-dashboard-user-info {
+    display: none;
+  }
+
+  .bs-dashboard-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bs-dashboard-filter-field {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .bs-dashboard-filter-actions {
+    width: 100%;
+  }
+
+  .bs-dashboard-apply-button,
+  .bs-dashboard-clear-button {
+    flex: 1;
+  }
+
+  .bs-dashboard-pagination {
+    gap: 10px;
+  }
+
+  .bs-dashboard-page-button {
+    padding: 8px 10px;
+  }
+}
+
+
+
+
+.bs-dashboard-create-button {
+  height: 38px;
+
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.bs-dashboard-create-button:hover {
+  background: #1d4ed8;
+}
+
+.bs-dashboard-edit-button {
+  padding: 6px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.bs-dashboard-edit-button:hover {
+  background: #f3f4f6;
+}

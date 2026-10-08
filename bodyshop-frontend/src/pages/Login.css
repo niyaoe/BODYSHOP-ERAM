@@ -1,0 +1,95 @@
+.bs-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #f4f6f9;
+}
+
+.bs-login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+.bs-login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.bs-login-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.bs-login-subtitle {
+  margin-top: 8px;
+  color: #6b7280;
+}
+
+.bs-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bs-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.bs-login-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.bs-login-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.bs-login-input:focus {
+  border-color: #2563eb;
+}
+
+.bs-login-button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bs-login-button:hover {
+  background: #1d4ed8;
+}
+
+.bs-login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.bs-login-error {
+  padding: 10px 12px;
+  border-radius: 7px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 14px;
+}

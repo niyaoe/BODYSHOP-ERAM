@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const branchRoutes = require("./routes/branchRoutes");
 const formRoutes = require("./routes/formRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const statusRoutes = require("./routes/statusRoutes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/branches", branchRoutes);
 app.use("/api/forms", formRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/statuses", statusRoutes);
 
 // Test route
 app.get("/", (req, res) => {

@@ -1,5 +1,7 @@
 const FormRecord = require("../models/FormRecord");
 const Branch = require("../models/Branch");
+const Status = require("../models/Status");
+const mongoose = require("mongoose");
 
 // Create form record
 const createFormRecord = async (req, res) => {
@@ -42,7 +44,8 @@ const createFormRecord = async (req, res) => {
       !model ||
       !customerName ||
       !contactNo ||
-      !serviceAdvisor
+      !serviceAdvisor ||
+      !presentStatus
     ) {
       return res.status(400).json({
         message:
@@ -104,6 +107,23 @@ const createFormRecord = async (req, res) => {
 
     const slNo = lastRecord ? lastRecord.slNo + 1 : 1;
 
+    if (!mongoose.Types.ObjectId.isValid(presentStatus)) {
+      return res.status(400).json({
+        message: "Invalid present status ID",
+      });
+    }
+
+    const status = await Status.findOne({
+      _id: presentStatus,
+      isActive: true,
+    });
+
+    if (!status) {
+      return res.status(400).json({
+        message: "Invalid or inactive present status",
+      });
+    }
+
     // ----------------------------------
     // Create record
     // ----------------------------------
@@ -140,7 +160,7 @@ const createFormRecord = async (req, res) => {
 
       promisedDeliveryDate,
 
-      presentStatus,
+      presentStatus: status._id,
 
       labourBillAmount,
       partsBillAmount,
@@ -154,7 +174,8 @@ const createFormRecord = async (req, res) => {
 
     const createdRecord = await FormRecord.findById(record._id)
       .populate("branch", "name code")
-      .populate("createdBy", "name email role");
+      .populate("createdBy", "name email role")
+      .populate("presentStatus", "name section");
 
     res.status(201).json({
       message: "Form record created successfully",
@@ -432,9 +453,25 @@ const updateFormRecord = async (req, res) => {
     }
 
     if (presentStatus !== undefined) {
-      record.presentStatus = presentStatus;
-    }
+      if (!mongoose.Types.ObjectId.isValid(presentStatus)) {
+        return res.status(400).json({
+          message: "Invalid present status ID",
+        });
+      }
 
+      const status = await Status.findOne({
+        _id: presentStatus,
+        isActive: true,
+      });
+
+      if (!status) {
+        return res.status(400).json({
+          message: "Invalid or inactive present status",
+        });
+      }
+
+      record.presentStatus = status._id;
+    }
     if (labourBillAmount !== undefined) {
       record.labourBillAmount = labourBillAmount;
     }
