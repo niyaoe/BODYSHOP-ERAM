@@ -36,22 +36,22 @@ const createFormRecord = async (req, res) => {
     // Basic validation
     // ----------------------------------
 
-    if (
-      !yardEntryDate ||
-      !roDate ||
-      !roNumber ||
-      !regNo ||
-      !model ||
-      !customerName ||
-      !contactNo ||
-      !serviceAdvisor ||
-      !presentStatus
-    ) {
-      return res.status(400).json({
-        message:
-          "Yard entry date, RO date, RO number, registration number, model, customer name, contact number and service advisor are required",
-      });
-    }
+    // if (
+    //   !yardEntryDate ||
+    //   !roDate ||
+    //   !roNumber ||
+    //   !regNo ||
+    //   !model ||
+    //   !customerName ||
+    //   !contactNo ||
+    //   !serviceAdvisor ||
+    //   !presentStatus
+    // ) {
+    //   return res.status(400).json({
+    //     message:
+    //       "Yard entry date, RO date, RO number, registration number, model, customer name, contact number and service advisor are required",
+    //   });
+    // }
 
     // ----------------------------------
     // Determine branch
