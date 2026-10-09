@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDashboard } from "../services/dashboardService";
 import "./Dashboard.css";
 import FormModal from "../components/FormModal";
+import AdminManagementPanel from "../components/AdminManagementPanel";
 
 function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -18,6 +19,8 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
+
+  const [adminPanelOpen, setAdminPanelOpen] = useState(false);
 
   // UI-only state: does not change dashboard data or API behavior.
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -53,6 +56,8 @@ function Dashboard() {
       if (toDate) params.toDate = toDate;
 
       const data = await getDashboard(params);
+      console.log(data);
+
       setDashboardData(data);
     } catch (error) {
       setError(
@@ -138,14 +143,33 @@ function Dashboard() {
 
           <button
             type="button"
-            className="bs-dashboard-sidebar-toggle"
+            className={`bs-dashboard-sidebar-toggle ${
+              sidebarCollapsed ? "is-collapsed" : ""
+            }`}
             onClick={() => setSidebarCollapsed((value) => !value)}
             aria-label={
               sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
             }
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <span>{sidebarCollapsed ? "»" : "«"}</span>
+            <svg
+              className="bs-dashboard-sidebar-grid-icon"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg>
+
             {!sidebarCollapsed && (
               <span className="bs-dashboard-sidebar-toggle-label">
                 Navigation
@@ -248,6 +272,16 @@ function Dashboard() {
               >
                 <span aria-hidden="true">＋</span> Create Record
               </button>
+              {user?.role === "admin" && (
+                <button
+                  type="button"
+                  className="bs-dashboard-admin-button"
+                  onClick={() => setAdminPanelOpen(true)}
+                >
+                  <span aria-hidden="true">⚙</span>
+                  Admin Management
+                </button>
+              )}
             </div>
           </div>
 
@@ -387,53 +421,42 @@ function Dashboard() {
                   <thead>
                     <tr>
                       <th>Sl No</th>
-                      <th>RO</th>
-                      <th>RO Date</th>
-                      <th>Customer</th>
-                      <th>Registration</th>
-                      <th>Model</th>
                       <th>Branch</th>
-                      <th>Contact No</th>
-                      <th>Insurance Name</th>
-                      <th>Insurance Status</th>
-                      <th>Service Adviser</th>
-                      <th>Job Type</th>
+                      <th className="bs-sticky-reg">Registration</th>
                       <th>Yard Entry Date</th>
-                      <th>Next PMS Date</th>
-                      <th>Promise Delivery Date</th>
-                      <th>WhatsApp Date</th>
-                      <th>RSA Eligibility</th>
-                      <th>Shield Eligibility</th>
-                      <th>Labour Estimate</th>
-                      <th>Parts Bill Amount</th>
-                      <th>Parts Estimate</th>
-                      <th>Parts Bill Amount</th>
+                      <th>RO Date</th>
+                      <th>RO</th>
+                      <th>Model</th>
+                      <th>Job</th>
                       <th>Status</th>
-                      <th>Action</th>
+                      <th>Customer</th>
+                      <th>Contact No</th>
+                      <th>Insu Status</th>
+                      <th>Insu Name</th>
+                      <th>SA</th>
+                      <th>PMS Date</th>
+                      <th>RSA</th>
+                      <th>Shield</th>
+                      <th>WhatsApp</th>
+                      <th>Promise Date</th>
+                      <th>Labour Est</th>
+                      <th>Parts Est</th>
+                      <th>Bill Date</th>
+                      <th>Labour Amt</th>
+                      <th>Parts Amt</th>
+                      {/* <th>Action</th> */}
                     </tr>
                   </thead>
                   <tbody>
                     {dashboardData.records?.length > 0 ? (
                       dashboardData.records.map((record) => (
-                        <tr key={record._id}>
+                        <tr
+                          key={record._id}
+                          onClick={() => handleEditRecord(record)}
+                        >
                           <td>{record.slNo}</td>
-                          <td className="bs-dashboard-ro-cell">
-                            {record.roNumber}
-                          </td>
-                          <td>
-                            {record.roDate
-                              ? new Date(record.roDate).toLocaleDateString()
-                              : "-"}
-                          </td>
-                          <td>{record.customerName}</td>
-                          <td>{record.regNo}</td>
-                          <td>{record.model}</td>
                           <td>{record.branch?.name || "-"}</td>
-                          <td>{record.contactNo || "-"}</td>
-                          <td>{record.insuranceName || "-"}</td>
-                          <td>{record.insuranceStatus || "-"}</td>
-                          <td>{record.serviceAdvisor || "-"}</td>
-                          <td>{record.jobType || "-"}</td>
+                          <td className="bs-sticky-reg">{record.regNo}</td>
                           <td>
                             {record.yardEntryDate
                               ? new Date(
@@ -442,19 +465,41 @@ function Dashboard() {
                               : "-"}
                           </td>
                           <td>
+                            {record.roDate
+                              ? new Date(record.roDate).toLocaleDateString()
+                              : "-"}
+                          </td>
+                          <td className="bs-dashboard-ro-cell">
+                            {record.roNumber}
+                          </td>
+                          <td>{record.model}</td>
+                          <td>{record.jobType || "-"}</td>
+                          <td>
+                            <span className="bs-dashboard-status-pill">
+                              {record.presentStatus?.name || "-"}
+                            </span>
+                          </td>
+                          <td>{record.customerName}</td>
+                          <td>{record.contactNo || "-"}</td>
+                          <td>{record.insuranceStatus || "-"}</td>
+                          <td>{record.insuranceName || "-"}</td>
+                          <td>{record.serviceAdvisor || "-"}</td>
+                          {/* PMS Date */}
+                          <td>
                             {record.nextPmsDate
                               ? new Date(
                                   record.nextPmsDate,
                                 ).toLocaleDateString()
                               : "-"}
                           </td>
-                          <td>
-                            {record.promisedDeliveryDate
-                              ? new Date(
-                                  record.promisedDeliveryDate,
-                                ).toLocaleDateString()
-                              : "-"}
-                          </td>
+
+                          {/* RSA */}
+                          <td>{record.rsaEligibility || "-"}</td>
+
+                          {/* Shield */}
+                          <td>{record.shieldEligibility || "-"}</td>
+
+                          {/* WhatsApp */}
                           <td>
                             {record.whatsappGroupCreationDate
                               ? new Date(
@@ -462,25 +507,43 @@ function Dashboard() {
                                 ).toLocaleDateString()
                               : "-"}
                           </td>
-                          <td>{record.rsaEligibility || "-"}</td>
-                          <td>{record.shieldEligibility || "-"}</td>
-                          <td>{record.labourEstimate || "-"}</td>
-                          <td>{record.partsBillAmount || "-"}</td>
-                          <td>{record.partsEstimate || "-"}</td>
-                          <td>{record.partsBillAmount || "-"}</td>
+
+                          {/* Promise Date */}
                           <td>
-                            <span className="bs-dashboard-status-pill">
-                              {record.presentStatus?.name || "-"}
-                            </span>
+                            {record.promisedDeliveryDate
+                              ? new Date(
+                                  record.promisedDeliveryDate,
+                                ).toLocaleDateString()
+                              : "-"}
                           </td>
+
+                          {/* Labour Estimate */}
+                          <td>{record.labourEstimate ?? "-"}</td>
+
+                          {/* Parts Estimate */}
+                          <td>{record.partsEstimate ?? "-"}</td>
+
+                          {/* Bill Date */}
                           <td>
+                            {record.billDate
+                              ? new Date(record.billDate).toLocaleDateString()
+                              : "-"}
+                          </td>
+
+                          {/* Labour Amount */}
+                          <td>{record.labourBillAmount ?? "-"}</td>
+
+                          {/* Parts Amount */}
+                          <td>{record.partsBillAmount ?? "-"}</td>
+
+                          {/* <td>
                             <button
                               className="bs-dashboard-edit-button"
                               onClick={() => handleEditRecord(record)}
                             >
                               Edit
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))
                     ) : (
@@ -520,6 +583,12 @@ function Dashboard() {
           )}
         </main>
       </div>
+      {user?.role === "admin" && (
+        <AdminManagementPanel
+          isOpen={adminPanelOpen}
+          onClose={() => setAdminPanelOpen(false)}
+        />
+      )}
 
       <FormModal
         isOpen={showFormModal}

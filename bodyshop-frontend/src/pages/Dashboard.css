@@ -116,7 +116,7 @@
   padding-left: 8px;
   padding-right: 8px;
 }
-.bs-dashboard-sidebar-toggle {
+/* .bs-dashboard-sidebar-toggle {
   width: 100%;
   min-height: 38px;
   display: flex;
@@ -139,7 +139,7 @@
 }
 .bs-dashboard-sidebar-toggle-label {
   font-size: 12px;
-}
+} */
 .bs-dashboard-nav-label {
   padding: 23px 12px 9px;
   color: #9aa4b4;
@@ -892,4 +892,85 @@
 /* The dashboard no longer renders a horizontal top header. */
 .bs-dashboard-header {
   display: none;
+}
+
+
+
+/* sticky registration number */
+
+/* Freeze Registration column while scrolling horizontally */
+.bs-dashboard-table-wrapper {
+  overflow: auto;
+  position: relative;
+}
+
+.bs-dashboard-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.bs-dashboard-table th.bs-sticky-reg,
+.bs-dashboard-table td.bs-sticky-reg {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.08);
+}
+
+.bs-dashboard-table th.bs-sticky-reg {
+  z-index: 4;
+  background: #f7f8fc;
+}
+
+
+
+
+
+/* side bar toggle button */
+
+
+.bs-dashboard-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.bs-dashboard-sidebar-toggle:hover {
+  background: rgba(127, 127, 127, 0.1);
+}
+
+.bs-dashboard-sidebar-grid-icon {
+  display: block;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.bs-dashboard-sidebar-toggle-label {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.bs-dashboard-sidebar-toggle.is-collapsed {
+  justify-content: center;
+  padding-right: 8px;
+  padding-left: 8px;
 }
