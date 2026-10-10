@@ -76,17 +76,17 @@ const formRecordSchema = new mongoose.Schema(
 
     shieldEligibility: {
       type: String,
-      enum: ["Yes", "No"],
+      // enum: ["Yes", "No"],
     },
 
     rsaEligibility: {
       type: String,
-      enum: ["Yes", "No"],
+      // enum: ["Yes", "No"],
     },
 
     insuranceStatus: {
       type: String,
-      enum: ["In-House", "Out-Side", "Cash", "Warranty"],
+      // enum: ["In-House", "Out-Side", "Cash", "Warranty"],
     },
 
     insuranceName: {
@@ -106,7 +106,7 @@ const formRecordSchema = new mongoose.Schema(
 
     jobType: {
       type: String,
-      enum: ["M1", "M2", "M3", "M4"],
+      // enum: ["M1", "M2", "M3", "M4"],
     },
 
     promisedDeliveryDate: {
