@@ -3,11 +3,17 @@ import "./AdminManagementPanel.css";
 import BranchManagement from "./BranchManagement";
 import UserManagement from "./UserManagement";
 import StatusManagement from "./StatusManagement";
+import ModelManagement from "./ModelManagement";
+import InsuranceManagement from "./InsuranceManagement";
+import ServiceAdvisorManagement from "./ServiceAdvisorManagement";
 
 const sections = [
   { id: "branches", label: "Branches", icon: "⑂" },
   { id: "users", label: "Users", icon: "♙" },
   { id: "statuses", label: "Statuses", icon: "☷" },
+  { id: "models", label: "Models", icon: "🚙" },
+  { id: "insurance", label: "Insurance", icon: "▤" },
+  { id: "service-advisors", label: "SA", icon: "♧" },
 ];
 
 function AdminManagementPanel({ isOpen, onClose }) {
@@ -79,6 +85,12 @@ function AdminManagementPanel({ isOpen, onClose }) {
             <UserManagement />
           ) : activeSection === "statuses" ? (
             <StatusManagement />
+          ) : activeSection === "models" ? (
+            <ModelManagement />
+          ) : activeSection === "insurance" ? (
+            <InsuranceManagement />
+          ) : activeSection === "service-advisors" ? (
+            <ServiceAdvisorManagement />
           ) : null}
         </section>
 

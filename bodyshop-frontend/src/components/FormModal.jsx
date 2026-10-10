@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../api/axios";
 
 import {
   createFormRecord,
@@ -72,6 +73,12 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
 
   const [error, setError] = useState("");
 
+  const [vehicleModels, setVehicleModels] = useState([]);
+
+  const [insuranceCompanies, setInsuranceCompanies] = useState([]);
+
+  const [serviceAdvisors, setServiceAdvisors] = useState([]);
+
   const isEditMode = Boolean(editRecord);
 
   /*
@@ -80,24 +87,42 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
 
    */
 
+  const fetchVehicleModels = async () => {
+    try {
+      const response = await api.get("/vehicle-models");
+      setVehicleModels(response.data.vehicleModels || []);
+    } catch (error) {
+      console.error("Failed to load vehicle models:", error);
+    }
+  };
+
   useEffect(() => {
     if (!isOpen) return;
 
     const loadFormData = async () => {
       try {
         setLoadingData(true);
-
         setError("");
 
-        const statusData = await getStatuses();
+        const [statusData, modelData, insuranceData, advisorData] =
+          await Promise.all([
+            getStatuses(),
+            api.get("/vehicle-models"),
+            api.get("/insurance-companies"),
+            api.get("/service-advisors"),
+          ]);
 
         setStatuses(statusData.statuses || statusData || []);
 
-        // Branches are required only for admin
+        setVehicleModels(modelData.data.vehicleModels || []);
 
+        setInsuranceCompanies(insuranceData.data.insuranceCompanies || []);
+
+        setServiceAdvisors(advisorData.data.serviceAdvisors || []);
+
+        // Branches are required only for admin
         if (user?.role === "admin") {
           const branchData = await getBranches();
-
           setBranches(branchData.branches || branchData || []);
         }
       } catch (error) {
@@ -379,18 +404,26 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
                 </div>
 
                 <div className="bs-form-modal-field">
-                  <label htmlFor="bs-model">
-                    Model <span className="bs-form-modal-required">*</span>
+                  <label>
+                    Model
+                    <select
+                      name="model"
+                      value={form.model || ""}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select model</option>
+
+                      {vehicleModels.map((vehicleModel) => (
+                        <option
+                          key={vehicleModel._id}
+                          value={vehicleModel.name}
+                        >
+                          {vehicleModel.name}
+                        </option>
+                      ))}
+                    </select>
                   </label>
-                  <input
-                    id="bs-model"
-                    type="text"
-                    name="model"
-                    value={form.model}
-                    onChange={handleChange}
-                    placeholder="Vehicle model"
-                    required
-                  />
                 </div>
 
                 <div className="bs-form-modal-field">
@@ -469,26 +502,48 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
 
                 <div className="bs-form-modal-field">
                   <label htmlFor="bs-insuranceName">Insurance Name</label>
-                  <input
+                  <select
                     id="bs-insuranceName"
-                    type="text"
                     name="insuranceName"
-                    value={form.insuranceName}
+                    value={form.insuranceName || ""}
                     onChange={handleChange}
-                    placeholder="Insurance provider"
-                  />
+                  >
+                    <option value="">Select insurance company</option>
+
+                    {insuranceCompanies.map((company) => (
+                      <option key={company._id} value={company.name}>
+                        {company.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="bs-form-modal-field">
                   <label htmlFor="bs-serviceAdvisor">Service Adviser</label>
-                  <input
+
+                  <select
                     id="bs-serviceAdvisor"
-                    type="text"
                     name="serviceAdvisor"
-                    value={form.serviceAdvisor}
+                    value={form.serviceAdvisor || ""}
                     onChange={handleChange}
-                    placeholder="Advisor name"
-                  />
+                  >
+                    <option value="">Select service adviser</option>
+
+                    {serviceAdvisors.map((advisor) => (
+                      <option key={advisor._id} value={advisor.name}>
+                        {advisor.name}
+                      </option>
+                    ))}
+
+                    {form.serviceAdvisor &&
+                      !serviceAdvisors.some(
+                        (advisor) => advisor.name === form.serviceAdvisor,
+                      ) && (
+                        <option value={form.serviceAdvisor}>
+                          {form.serviceAdvisor} (existing)
+                        </option>
+                      )}
+                  </select>
                 </div>
 
                 <div className="bs-form-modal-field">

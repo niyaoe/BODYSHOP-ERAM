@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../services/dashboardService";
+import api from "../api/axios";
 import "./Dashboard.css";
 import FormModal from "../components/FormModal";
 import AdminManagementPanel from "../components/AdminManagementPanel";
@@ -56,7 +57,7 @@ function Dashboard() {
       if (toDate) params.toDate = toDate;
 
       const data = await getDashboard(params);
-      console.log(data);
+      // console.log(data);
 
       setDashboardData(data);
     } catch (error) {
@@ -75,16 +76,18 @@ function Dashboard() {
   useEffect(() => {
     const loadBranches = async () => {
       if (user?.role !== "admin") return;
+
       try {
-        const response = await fetch("http://localhost:5000/api/branches", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        });
-        const data = await response.json();
-        setBranches(data.branches || data || []);
+        const response = await api.get("/branches");
+        setBranches(response.data.branches || response.data || []);
       } catch (error) {
-        console.error("Failed to load branches:", error);
+        console.error(
+          "Failed to load branches:",
+          error.response?.data?.message || error.message,
+        );
       }
     };
+
     loadBranches();
   }, [user?.role]);
 
@@ -427,6 +430,7 @@ function Dashboard() {
                       <th>RO Date</th>
                       <th>RO</th>
                       <th>Model</th>
+                      <th>Segment</th>
                       <th>Job</th>
                       <th>Status</th>
                       <th>Customer</th>
@@ -473,6 +477,7 @@ function Dashboard() {
                             {record.roNumber}
                           </td>
                           <td>{record.model}</td>
+                          <td>{record.subSegmentName || "—"}</td>
                           <td>{record.jobType || "-"}</td>
                           <td>
                             <span className="bs-dashboard-status-pill">
