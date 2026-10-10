@@ -9,34 +9,34 @@ const formRecordSchema = new mongoose.Schema(
     branch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Branch",
-      required: true,
+      // required: true,
     },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
 
     yardEntryDate: {
       type: Date,
-      required: true,
+      // required: true,
     },
 
     roDate: {
       type: Date,
-      required: true,
+      // required: true,
     },
 
     roNumber: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
 
     regNo: {
       type: String,
-      required: true,
+      // required: true,
       uppercase: true,
       trim: true,
       match: [/^\S+$/, "Registration number cannot contain spaces"],
@@ -44,25 +44,25 @@ const formRecordSchema = new mongoose.Schema(
 
     model: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
 
     customerName: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
 
     contactNo: {
       type: String,
-      required: true,
+      // required: true,
       match: [/^\d{10}$/, "Contact number must be 10 digits"],
     },
 
     serviceAdvisor: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
 
