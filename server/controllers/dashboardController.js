@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Branch = require("../models/Branch");
 const FormRecord = require("../models/FormRecord");
 const Status = require("../models/Status");
+const VehicleModel = require("../models/VehicleModel");
 
 const getDashboard = async (req, res) => {
   try {
@@ -134,13 +135,34 @@ const getDashboard = async (req, res) => {
     // Records
     // ----------------------------------
 
-    const records = await FormRecord.find(filter)
+    let records = await FormRecord.find(filter)
       .populate("branch", "name code")
       .populate("createdBy", "name email role")
       .populate("presentStatus", "name section")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageLimit);
+
+    // Add sub-segment name based on the vehicle model
+    const vehicleModels = await VehicleModel.find({
+      isActive: true,
+    }).select("name subSegmentName");
+
+    const modelMap = new Map(
+      vehicleModels.map((item) => [
+        item.name.trim().toLowerCase(),
+        item.subSegmentName || "",
+      ]),
+    );
+
+    records = records.map((record) => {
+      const item = record.toObject();
+
+      item.subSegmentName =
+        modelMap.get(item.model?.trim().toLowerCase()) || "";
+
+      return item;
+    });
 
     const totalPages = Math.ceil(totalRecords / pageLimit);
 

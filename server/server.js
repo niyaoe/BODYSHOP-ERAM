@@ -11,6 +11,13 @@ const branchRoutes = require("./routes/branchRoutes");
 const formRoutes = require("./routes/formRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const statusRoutes = require("./routes/statusRoutes");
+const vehicleModelRoutes = require("./routes/vehicleModelRoutes");
+const insuranceCompanyRoutes = require("./routes/insuranceCompanyRoutes");
+const serviceAdvisorRoutes = require("./routes/serviceAdvisorRoutes");
+
+
+
+
 
 const app = express();
 
@@ -28,6 +35,9 @@ app.use("/api/branches", branchRoutes);
 app.use("/api/forms", formRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/statuses", statusRoutes);
+app.use("/api/vehicle-models", vehicleModelRoutes);
+app.use("/api/insurance-companies", insuranceCompanyRoutes);
+app.use("/api/service-advisors", serviceAdvisorRoutes);
 
 // Test route
 app.get("/", (req, res) => {
