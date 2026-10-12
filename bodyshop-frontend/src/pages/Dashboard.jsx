@@ -475,14 +475,26 @@ function Dashboard() {
             </section>
           )}
 
-          {loading && (
+          {/* {loading && (
             <div className="bs-dashboard-loading">Loading records...</div>
-          )}
+          )} */}
+
+          
           {error && <div className="bs-dashboard-error">{error}</div>}
 
-          {!loading && !error && dashboardData && (
+          {!error && dashboardData && (
             <section className="bs-dashboard-records">
               <div className="bs-dashboard-table-wrapper">
+                {loading && (
+                  <div className="bs-table-loading-overlay">
+                    <img
+                      src="/loading.png"
+                      alt="Loading..."
+                      className="bs-loading-spinner"
+                    />
+                    {/* <p>Loading records...</p> */}
+                  </div>
+                )}
                 <table className="bs-dashboard-table">
                   <thead>
                     <tr>
@@ -511,7 +523,7 @@ function Dashboard() {
                       <th>Bill Date</th>
                       <th>Labour Amt</th>
                       <th>Parts Amt</th>
-                      
+
                       {/* <th>Action</th> */}
                     </tr>
                   </thead>

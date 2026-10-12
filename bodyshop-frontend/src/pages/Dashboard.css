@@ -434,7 +434,7 @@
 
 .bs-dashboard-summary {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 8px;
 }
 .bs-dashboard-card {
@@ -471,11 +471,75 @@
   border-radius: 8px;
   font-size: 12px;
 }
-.bs-dashboard-loading {
-  color: #586579;
-  background: #fff;
-  border: 1px solid var(--bs-dash-line);
+
+/* loading */
+
+.bs-table-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  min-height: 200px;
 }
+
+.bs-loading-spinner {
+  width: 40px;
+  height: auto;
+  object-fit: contain;
+  animation: bs-loading-spin 2s linear infinite;
+}
+
+.bs-table-loading-overlay p {
+  margin-top: 10px;
+  color: #475569;
+  font-size: 14px;
+}
+
+
+.bs-dashboard-table-wrapper {
+  position: relative;
+}
+
+.bs-table-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  min-height: 200px;
+}
+
+.bs-loading-spinner {
+  width: 40px;
+  height: auto;
+  object-fit: contain;
+  animation: bs-loading-spin 1.5s linear infinite;
+}
+
+.bs-table-loading-overlay p {
+  margin-top: 10px;
+  color: #475569;
+  font-size: 14px;
+}
+
+@keyframes bs-loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 .bs-dashboard-error {
   color: #b42318;
   background: #fff2f0;
