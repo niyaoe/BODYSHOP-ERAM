@@ -158,8 +158,9 @@ const getDashboard = async (req, res) => {
     records = records.map((record) => {
       const item = record.toObject();
 
-      item.subSegmentName =
-        modelMap.get(item.model?.trim().toLowerCase()) || "";
+      item.subSegmentName = (
+        modelMap.get(item.model?.trim().toLowerCase()) || ""
+      ).toUpperCase();
 
       return item;
     });
