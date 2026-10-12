@@ -4,6 +4,7 @@ const {
   createFormRecord,
   getFormRecords,
   updateFormRecord,
+  getFormRecordHistory,
 } = require("../controllers/formController");
 
 const protect = require("../middleware/authMiddleware");
@@ -19,5 +20,12 @@ router.post("/", protect, authorize("admin", "user"), createFormRecord);
 
 // Update record
 router.put("/:id", protect, authorize("admin", "user"), updateFormRecord);
+
+router.get(
+  "/:id/history",
+  protect,
+  authorize("admin"),
+  getFormRecordHistory,
+);
 
 module.exports = router;

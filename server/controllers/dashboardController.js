@@ -334,19 +334,36 @@ const getDashboard = async (req, res) => {
         ? new Date(item.promisedDeliveryDate)
         : null;
 
-      if (promiseDate) {
+      if (!promiseDate) {
+        // Empty promise delivery date
+        item.isDeliveryOverdue = true;
+        item.deliveryDaysOverdue = null;
+      } else {
         promiseDate.setHours(0, 0, 0, 0);
 
         const daysOverdue = Math.floor(
           (today.getTime() - promiseDate.getTime()) / (1000 * 60 * 60 * 24),
         );
 
-        item.isDeliveryOverdue = daysOverdue >= 4;
+        item.isDeliveryOverdue = daysOverdue >= 1;
         item.deliveryDaysOverdue = daysOverdue;
-      } else {
-        item.isDeliveryOverdue = false;
-        item.deliveryDaysOverdue = 0;
       }
+
+      // imp without blank
+
+      // if (promiseDate) {
+      //   promiseDate.setHours(0, 0, 0, 0);
+
+      //   const daysOverdue = Math.floor(
+      //     (today.getTime() - promiseDate.getTime()) / (1000 * 60 * 60 * 24),
+      //   );
+
+      //   item.isDeliveryOverdue = daysOverdue >= 1;
+      //   item.deliveryDaysOverdue = daysOverdue;
+      // } else {
+      //   item.isDeliveryOverdue = false;
+      //   item.deliveryDaysOverdue = 0;
+      // }
 
       return item;
     });

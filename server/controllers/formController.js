@@ -2,6 +2,7 @@ const FormRecord = require("../models/FormRecord");
 const Branch = require("../models/Branch");
 const Status = require("../models/Status");
 const mongoose = require("mongoose");
+const RecordHistory = require("../models/RecordHistory");
 
 // Create form record
 const createFormRecord = async (req, res) => {
@@ -167,6 +168,47 @@ const createFormRecord = async (req, res) => {
 
       billDate,
     });
+
+    const createdStatus = await Status.findById(record.presentStatus).select(
+      "name",
+    );
+
+    await RecordHistory.insertMany([
+      {
+        record: record._id,
+        field: "presentStatus",
+        action: "Created",
+        oldValue: null,
+        newValue: createdStatus?.name || "",
+        changedBy: req.user._id,
+      },
+      {
+        record: record._id,
+        field: "promisedDeliveryDate",
+        action: "Created",
+        oldValue: null,
+        newValue: record.promisedDeliveryDate
+          ? new Date(record.promisedDeliveryDate).toISOString().slice(0, 10)
+          : "",
+        changedBy: req.user._id,
+      },
+      {
+        record: record._id,
+        field: "labourEstimate",
+        action: "Created",
+        oldValue: null,
+        newValue: record.labourEstimate ?? null,
+        changedBy: req.user._id,
+      },
+      {
+        record: record._id,
+        field: "partsEstimate",
+        action: "Created",
+        oldValue: null,
+        newValue: record.partsEstimate ?? null,
+        changedBy: req.user._id,
+      },
+    ]);
 
     // ----------------------------------
     // Return populated record
@@ -376,6 +418,19 @@ const updateFormRecord = async (req, res) => {
       record.branch = branch;
     }
 
+    const previousStatus = record.presentStatus
+      ? await Status.findById(record.presentStatus).select("name")
+      : null;
+
+    const previousValues = {
+      presentStatus: previousStatus?.name || "",
+      promisedDeliveryDate: record.promisedDeliveryDate
+        ? new Date(record.promisedDeliveryDate).toISOString().slice(0, 10)
+        : "",
+      labourEstimate: record.labourEstimate ?? null,
+      partsEstimate: record.partsEstimate ?? null,
+    };
+
     // ----------------------------------
     // Update fields
     // ----------------------------------
@@ -484,7 +539,46 @@ const updateFormRecord = async (req, res) => {
       record.billDate = billDate;
     }
 
+    const currentStatus = record.presentStatus
+      ? await Status.findById(record.presentStatus).select("name")
+      : null;
+
+    const currentValues = {
+      presentStatus: currentStatus?.name || "",
+      promisedDeliveryDate: record.promisedDeliveryDate
+        ? new Date(record.promisedDeliveryDate).toISOString().slice(0, 10)
+        : "",
+      labourEstimate: record.labourEstimate ?? null,
+      partsEstimate: record.partsEstimate ?? null,
+    };
+
+    const fieldNames = {
+      presentStatus: "Present Status",
+      promisedDeliveryDate: "Promise Delivery Date",
+      labourEstimate: "Labour Estimate",
+      partsEstimate: "Parts Estimate",
+    };
+
+    const historyEntries = Object.keys(fieldNames)
+      .filter(
+        (field) =>
+          JSON.stringify(previousValues[field]) !==
+          JSON.stringify(currentValues[field]),
+      )
+      .map((field) => ({
+        record: record._id,
+        field,
+        action: "Updated",
+        oldValue: previousValues[field],
+        newValue: currentValues[field],
+        changedBy: req.user._id,
+      }));
+
     await record.save();
+
+    if (historyEntries.length > 0) {
+      await RecordHistory.insertMany(historyEntries);
+    }
 
     // ----------------------------------
     // Return updated record
@@ -508,8 +602,64 @@ const updateFormRecord = async (req, res) => {
   }
 };
 
+
+
+const getFormRecordHistory = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const record = await FormRecord.findById(id).select(
+      "_id branch",
+    );
+
+    if (!record) {
+      return res.status(404).json({
+        message: "Form record not found",
+      });
+    }
+
+    // Users can only view history for their assigned branch.
+    if (req.user.role === "user") {
+      const userBranchId = req.user.branch?._id
+        ? req.user.branch._id.toString()
+        : req.user.branch?.toString();
+
+      if (!userBranchId) {
+        return res.status(403).json({
+          message: "User does not have an assigned branch",
+        });
+      }
+
+      if (record.branch.toString() !== userBranchId) {
+        return res.status(403).json({
+          message: "You cannot view history from another branch",
+        });
+      }
+    }
+
+    const history = await RecordHistory.find({
+      record: id,
+    })
+      .populate("changedBy", "name email role")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: "Record history fetched successfully",
+      history,
+    });
+  } catch (error) {
+    console.error("Get record history error:", error);
+
+    return res.status(500).json({
+      message: "Failed to fetch record history",
+    });
+  }
+};
+
+
 module.exports = {
   createFormRecord,
   getFormRecords,
   updateFormRecord,
+  getFormRecordHistory,
 };
