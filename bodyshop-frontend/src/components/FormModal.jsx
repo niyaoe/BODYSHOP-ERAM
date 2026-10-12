@@ -81,6 +81,11 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
 
   const isEditMode = Boolean(editRecord);
 
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [recordHistory, setRecordHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
+
   /*
 
    * Load branches and statuses
@@ -282,6 +287,51 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
     return null;
   }
 
+  const handleViewHistory = async () => {
+    if (historyOpen) {
+      setHistoryOpen(false);
+      return;
+    }
+
+    if (!editRecord?._id) return;
+
+    setHistoryOpen(true);
+    setHistoryLoading(true);
+    setHistoryError("");
+
+    try {
+      const response = await api.get(`/forms/${editRecord._id}/history`);
+
+      setRecordHistory(response.data.history || []);
+    } catch (error) {
+      setHistoryError(
+        error.response?.data?.message || "Failed to load record history",
+      );
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const formatHistoryValue = (field, value) => {
+    if (value === null || value === undefined || value === "") {
+      return "—";
+    }
+
+    if (field === "promisedDeliveryDate") {
+      const date = new Date(`${value}T00:00:00`);
+
+      return Number.isNaN(date.getTime())
+        ? String(value)
+        : date.toLocaleDateString("en-IN");
+    }
+
+    if (field === "labourEstimate" || field === "partsEstimate") {
+      return `₹${Number(value).toLocaleString("en-IN")}`;
+    }
+
+    return String(value);
+  };
+
   return (
     <div
       className="bs-form-modal-overlay"
@@ -307,6 +357,16 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
             </p>
           </div>
 
+          {isEditMode && user?.role === "admin" && (
+            <button
+              type="button"
+              className="bs-form-modal-history-button"
+              onClick={handleViewHistory}
+            >
+              {historyOpen ? "Back to Record" : "History"}
+            </button>
+          )}
+
           <button
             type="button"
             className="bs-form-modal-close"
@@ -320,7 +380,80 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
 
         {error && <div className="bs-form-modal-error">{error}</div>}
 
-        {loadingData ? (
+        {historyOpen ? (
+          <div className="bs-form-modal-history">
+            <h3>Record History</h3>
+
+            {historyLoading && (
+              <div className="bs-form-modal-history-message">
+                Loading history...
+              </div>
+            )}
+
+            {historyError && (
+              <div className="bs-form-modal-error">{historyError}</div>
+            )}
+
+            {!historyLoading && !historyError && recordHistory.length === 0 && (
+              <div className="bs-form-modal-history-message">
+                No history available.
+              </div>
+            )}
+
+            {!historyLoading && !historyError && recordHistory.length > 0 && (
+              <div className="bs-form-modal-history-table-wrapper">
+                <table className="bs-form-modal-history-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Action</th>
+                      <th>Old Value</th>
+                      <th>New Value</th>
+                      <th>Changed By</th>
+                      <th>Date & Time</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {recordHistory.map((entry) => (
+                      <tr key={entry._id}>
+                        <td>
+                          {{
+                            presentStatus: "Present Status",
+                            promisedDeliveryDate: "Promise Delivery Date",
+                            labourEstimate: "Labour Estimate",
+                            partsEstimate: "Parts Estimate",
+                          }[entry.field] || entry.field}
+                        </td>
+
+                        <td>{entry.action}</td>
+
+                        <td>
+                          {formatHistoryValue(entry.field, entry.oldValue)}
+                        </td>
+
+                        <td>
+                          {formatHistoryValue(entry.field, entry.newValue)}
+                        </td>
+
+                        <td>
+                          {entry.changedBy?.name || "Unknown"}
+                          {entry.changedBy?.role
+                            ? ` (${entry.changedBy.role})`
+                            : ""}
+                        </td>
+
+                        <td>
+                          {new Date(entry.createdAt).toLocaleString("en-IN")}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        ) : loadingData ? (
           <div className="bs-form-modal-loading">
             <img
               src="/loading.png"

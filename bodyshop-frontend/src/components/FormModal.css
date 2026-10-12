@@ -361,3 +361,84 @@
     transition: none;
   }
 }
+
+
+
+
+/* history */
+
+
+.bs-form-modal-history-button {
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #334155;
+  padding: 8px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bs-form-modal-history-button:hover {
+  background: #f1f5f9;
+}
+
+.bs-form-modal-history {
+  min-height: 250px;
+  padding: 18px;
+  overflow: hidden;
+}
+
+.bs-form-modal-history h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.bs-form-modal-history-message {
+  padding: 30px 12px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.bs-form-modal-history-table-wrapper {
+  width: 100%;
+  max-height: 55vh;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.bs-form-modal-history-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.bs-form-modal-history-table th,
+.bs-form-modal-history-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.bs-form-modal-history-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+}
+
+.bs-form-modal-history-table td {
+  color: #334155;
+}
+
+.bs-form-modal-history-table tbody tr:hover {
+  background: #f8fafc;
+}

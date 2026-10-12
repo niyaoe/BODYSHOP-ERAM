@@ -603,7 +603,7 @@
   transition: background 0.12s ease;
 }
 .bs-dashboard-table tbody tr:hover {
-  background: #f8faff;
+  background: #f0e3ff;
 }
 .bs-dashboard-table tbody tr:last-child td {
   border-bottom: 0;
