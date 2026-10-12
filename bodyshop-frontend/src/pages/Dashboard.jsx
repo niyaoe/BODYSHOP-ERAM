@@ -25,8 +25,8 @@ function Dashboard() {
 
   // UI-only state: does not change dashboard data or API behavior.
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
-  const [filtersVisible, setFiltersVisible] = useState(true);
-  const [summaryVisible, setSummaryVisible] = useState(true);
+  const [filtersVisible, setFiltersVisible] = useState(false);
+  const [summaryVisible, setSummaryVisible] = useState(false);
 
   const handleCreateRecord = () => {
     setEditingRecord(null);
@@ -148,45 +148,6 @@ function Dashboard() {
             )}
           </div>
 
-          {/* <button
-            type="button"
-            className={`bs-dashboard-sidebar-toggle ${
-              sidebarCollapsed ? "is-collapsed" : ""
-            }`}
-            onClick={() => setSidebarCollapsed((value) => !value)}
-            aria-label={
-              sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"
-            }
-            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <svg
-              className="bs-dashboard-sidebar-grid-icon"
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <rect x="3" y="3" width="7" height="7" rx="1.5" />
-              <rect x="14" y="3" width="7" height="7" rx="1.5" />
-              <rect x="3" y="14" width="7" height="7" rx="1.5" />
-              <rect x="14" y="14" width="7" height="7" rx="1.5" />
-            </svg>
-
-            {!sidebarCollapsed && (
-              <span className="bs-dashboard-sidebar-toggle-label">
-                Navigation
-              </span>
-            )}
-          </button> */}
-
-          {/* <div className="bs-dashboard-nav-label">
-            {!sidebarCollapsed && "WORKSPACE"}
-          </div> */}
           <nav className="bs-dashboard-tabs" aria-label="Dashboard sections">
             {sections.map((section) => (
               <button
@@ -375,42 +336,140 @@ function Dashboard() {
             >
               <div className="bs-dashboard-collapsible-inner">
                 <section className="bs-dashboard-summary">
-                  <div className="bs-dashboard-card">
-                    <span className="bs-dashboard-card-label">
-                      Total Records
-                    </span>
-                    <strong className="bs-dashboard-card-value">
-                      {dashboardData.summary?.totalRecords || 0}
-                    </strong>
-                  </div>
-                  <div className="bs-dashboard-card">
-                    <span className="bs-dashboard-card-label">
-                      Labour Estimate
-                    </span>
-                    <strong className="bs-dashboard-card-value">
-                      ₹{dashboardData.summary?.totalLabourEstimate || 0}
-                    </strong>
-                  </div>
-                  <div className="bs-dashboard-card">
-                    <span className="bs-dashboard-card-label">
-                      Parts Estimate
-                    </span>
-                    <strong className="bs-dashboard-card-value">
-                      ₹{dashboardData.summary?.totalPartsEstimate || 0}
-                    </strong>
-                  </div>
-                  <div className="bs-dashboard-card">
-                    <span className="bs-dashboard-card-label">Labour Bill</span>
-                    <strong className="bs-dashboard-card-value">
-                      ₹{dashboardData.summary?.totalLabourBill || 0}
-                    </strong>
-                  </div>
-                  <div className="bs-dashboard-card">
-                    <span className="bs-dashboard-card-label">Parts Bill</span>
-                    <strong className="bs-dashboard-card-value">
-                      ₹{dashboardData.summary?.totalPartsBill || 0}
-                    </strong>
-                  </div>
+                  {activeSection === "open" ? (
+                    <>
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Open Records
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          {(
+                            dashboardData.openStatusSummary?.totalOpenRecords ??
+                            0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Labour Estimate
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          ₹
+                          {(
+                            dashboardData.openStatusSummary
+                              ?.totalLabourEstimate ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Parts Estimate
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          ₹
+                          {(
+                            dashboardData.openStatusSummary
+                              ?.totalPartsEstimate ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      {(dashboardData.openStatusSummary?.statuses ?? []).map(
+                        (status) => (
+                          <div className="bs-dashboard-card" key={status.name}>
+                            <span className="bs-dashboard-card-label">
+                              {status.name}
+                            </span>
+                            <strong className="bs-dashboard-card-value">
+                              {status.count.toLocaleString("en-IN")}
+                            </strong>
+                          </div>
+                        ),
+                      )}
+                    </>
+                  ) : activeSection === "billed" ? (
+                    <>
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Billed Records
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          {(
+                            dashboardData.billedStatusSummary
+                              ?.totalBilledRecords ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Labour Bill
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          ₹
+                          {(
+                            dashboardData.billedStatusSummary
+                              ?.totalLabourBill ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Parts Bill
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          ₹
+                          {(
+                            dashboardData.billedStatusSummary?.totalPartsBill ??
+                            0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Legal / Loss Records
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          {(
+                            dashboardData.legalLossSummary
+                              ?.totalLegalLossRecords ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Labour Estimate
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          ₹
+                          {(
+                            dashboardData.legalLossSummary
+                              ?.totalLabourEstimate ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+
+                      <div className="bs-dashboard-card">
+                        <span className="bs-dashboard-card-label">
+                          Total Parts Estimate
+                        </span>
+                        <strong className="bs-dashboard-card-value">
+                          ₹
+                          {(
+                            dashboardData.legalLossSummary
+                              ?.totalPartsEstimate ?? 0
+                          ).toLocaleString("en-IN")}
+                        </strong>
+                      </div>
+                    </>
+                  )}
                 </section>
               </div>
             </section>
@@ -452,6 +511,7 @@ function Dashboard() {
                       <th>Bill Date</th>
                       <th>Labour Amt</th>
                       <th>Parts Amt</th>
+                      
                       {/* <th>Action</th> */}
                     </tr>
                   </thead>
@@ -461,6 +521,16 @@ function Dashboard() {
                         <tr
                           key={record._id}
                           onClick={() => handleEditRecord(record)}
+                          className={
+                            record.isDeliveryOverdue
+                              ? "bs-delivery-overdue-row"
+                              : ""
+                          }
+                          title={
+                            record.isDeliveryOverdue
+                              ? `${record.deliveryDaysOverdue} days past promised delivery date`
+                              : undefined
+                          }
                         >
                           <td>{record.slNo}</td>
                           <td>{record.branch?.name || "-"}</td>
