@@ -59,7 +59,7 @@ function AdminManagementPanel({ isOpen, onClose }) {
               }`}
               onClick={() => setActiveSection(item.id)}
             >
-              <span className="bs-admin-panel-nav-icon">{item.icon}</span>
+              {/* <span className="bs-admin-panel-nav-icon">{item.icon}</span> */}
               <span>{item.label}</span>
               <span className="bs-admin-panel-nav-arrow">›</span>
             </button>
