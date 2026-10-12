@@ -260,3 +260,63 @@
 }
 
 
+
+/* Branch dropdown — match existing inputs */
+.bs-advisor-form select {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 11px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  outline: none;
+  background: #fff;
+  color: #111827;
+  font: inherit;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.bs-advisor-form select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* Adviser status */
+.bs-advisor-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.bs-advisor-status-active {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.bs-advisor-status-inactive {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* Activate action */
+.bs-advisor-activate {
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid #bbf7d0;
+  border-radius: 7px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bs-advisor-activate:hover {
+  background: #dcfce7;
+}

@@ -184,7 +184,7 @@ function ModelManagement() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="e.g. Swift"
+              placeholder="e.g. SCORPIO-CLASSIC"
               required
             />
           </label>
@@ -196,7 +196,7 @@ function ModelManagement() {
               name="subSegmentName"
               value={form.subSegmentName}
               onChange={handleChange}
-              placeholder="e.g. Hatchback"
+              placeholder="e.g. PV"
             />
           </label>
 

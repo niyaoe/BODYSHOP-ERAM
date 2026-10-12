@@ -1,15 +1,15 @@
-
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import "./ServiceAdvisorManagement.css";
 
 const EMPTY_FORM = {
   name: "",
-  sortOrder: 0,
+  branchId: "",
 };
 
 function ServiceAdvisorManagement() {
   const [advisors, setAdvisors] = useState([]);
+  const [branches, setBranches] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -22,25 +22,35 @@ function ServiceAdvisorManagement() {
     setError("");
 
     try {
-      const response = await api.get("/service-advisors");
+      const response = await api.get("/service-advisors?includeInactive=true");
       setAdvisors(response.data.serviceAdvisors || []);
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "Unable to load service advisers."
+        err.response?.data?.message || "Unable to load service advisers.",
       );
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchBranches = async () => {
+    try {
+      const response = await api.get("/branches");
+      setBranches(response.data.branches || []);
+    } catch (err) {
+      setError(err.response?.data?.message || "Unable to load branches.");
+    }
+  };
+
   useEffect(() => {
+    fetchBranches();
     fetchAdvisors();
   }, []);
 
   const resetForm = () => {
     setForm(EMPTY_FORM);
     setEditingId(null);
+    setError("");
   };
 
   const handleChange = (event) => {
@@ -54,10 +64,12 @@ function ServiceAdvisorManagement() {
 
   const handleEdit = (advisor) => {
     setEditingId(advisor._id);
+
     setForm({
       name: advisor.name || "",
-      sortOrder: advisor.sortOrder ?? 0,
+      branchId: advisor.branch?._id || advisor.branch || "",
     });
+
     setError("");
     setSuccess("");
   };
@@ -72,16 +84,21 @@ function ServiceAdvisorManagement() {
       return;
     }
 
+    if (!form.branchId) {
+      setError("Please select a branch.");
+      return;
+    }
+
     try {
       setSaving(true);
 
       const payload = {
         name: form.name.trim(),
-        sortOrder: Number(form.sortOrder) || 0,
+        branchId: form.branchId,
       };
 
       if (editingId) {
-        await api.put(`/service-advisors/${editingId}`, payload);
+        await api.patch(`/service-advisors/${editingId}`, payload);
         setSuccess("Service adviser updated successfully.");
       } else {
         await api.post("/service-advisors", payload);
@@ -92,8 +109,7 @@ function ServiceAdvisorManagement() {
       await fetchAdvisors();
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "Unable to save service adviser."
+        err.response?.data?.message || "Unable to save service adviser.",
       );
     } finally {
       setSaving(false);
@@ -102,7 +118,7 @@ function ServiceAdvisorManagement() {
 
   const handleDeactivate = async (advisor) => {
     const confirmed = window.confirm(
-      `Deactivate ${advisor.name}? Existing records will remain unchanged.`
+      `Deactivate ${advisor.name}? Existing records will remain unchanged.`,
     );
 
     if (!confirmed) return;
@@ -111,15 +127,45 @@ function ServiceAdvisorManagement() {
     setSuccess("");
 
     try {
-      await api.delete(`/service-advisors/${advisor._id}`);
+      await api.patch(`/service-advisors/${advisor._id}`, {
+        isActive: false,
+      });
+
       setSuccess(`${advisor.name} deactivated successfully.`);
       await fetchAdvisors();
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "Unable to deactivate service adviser."
+        err.response?.data?.message || "Unable to deactivate service adviser.",
       );
     }
+  };
+
+  const handleActivate = async (advisor) => {
+    setError("");
+    setSuccess("");
+
+    try {
+      await api.patch(`/service-advisors/${advisor._id}`, {
+        isActive: true,
+      });
+
+      setSuccess(`${advisor.name} activated successfully.`);
+      await fetchAdvisors();
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Unable to activate service adviser.",
+      );
+    }
+  };
+
+  const getBranchName = (advisor) => {
+    if (advisor.branch && typeof advisor.branch === "object") {
+      return advisor.branch.name || "Unknown branch";
+    }
+
+    const branch = branches.find((item) => item._id === advisor.branch);
+
+    return branch?.name || "Unknown branch";
   };
 
   return (
@@ -127,13 +173,16 @@ function ServiceAdvisorManagement() {
       <div className="bs-advisor-heading">
         <div>
           <h3>Service Adviser Management</h3>
-          <p>Manage service advisers available in the tracker.</p>
+          <p>Manage service advisers assigned to each branch.</p>
         </div>
 
         <button
           type="button"
           className="bs-advisor-refresh"
-          onClick={fetchAdvisors}
+          onClick={() => {
+            fetchBranches();
+            fetchAdvisors();
+          }}
           disabled={loading}
           title="Refresh service advisers"
         >
@@ -142,10 +191,7 @@ function ServiceAdvisorManagement() {
       </div>
 
       {error && (
-        <div
-          className="bs-advisor-alert bs-advisor-alert-error"
-          role="alert"
-        >
+        <div className="bs-advisor-alert bs-advisor-alert-error" role="alert">
           {error}
         </div>
       )}
@@ -162,11 +208,13 @@ function ServiceAdvisorManagement() {
       <section className="bs-advisor-form-section">
         <div className="bs-advisor-section-title">
           <div>
-            <h4>{editingId ? "Edit service adviser" : "Add service adviser"}</h4>
+            <h4>
+              {editingId ? "Edit service adviser" : "Add service adviser"}
+            </h4>
             <p>
               {editingId
-                ? "Update the selected service adviser."
-                : "Add a service adviser to the available list."}
+                ? "Update the name or assigned branch."
+                : "Add a service adviser and assign a branch."}
             </p>
           </div>
 
@@ -196,20 +244,28 @@ function ServiceAdvisorManagement() {
           </label>
 
           <label>
-            Sort order
-            <input
-              type="number"
-              name="sortOrder"
-              value={form.sortOrder}
+            Branch
+            <select
+              name="branchId"
+              value={form.branchId}
               onChange={handleChange}
-            />
+              required
+            >
+              <option value="">Select branch</option>
+
+              {branches.map((branch) => (
+                <option key={branch._id} value={branch._id}>
+                  {branch.name}({branch.code})
+                </option>
+              ))}
+            </select>
           </label>
 
           <div className="bs-advisor-form-actions">
             <button
               type="submit"
               className="bs-advisor-save"
-              disabled={saving}
+              disabled={saving || branches.length === 0}
             >
               {saving
                 ? "Saving..."
@@ -236,7 +292,15 @@ function ServiceAdvisorManagement() {
         <div className="bs-advisor-list-heading">
           <div>
             <h4>Service advisers</h4>
-            <p>{advisors.length} active advisers</p>
+            <p>
+              {advisors.filter((advisor) => advisor.isActive !== false).length}{" "}
+              active
+              {" · "}
+              {
+                advisors.filter((advisor) => advisor.isActive === false).length
+              }{" "}
+              inactive
+            </p>
           </div>
         </div>
 
@@ -250,7 +314,8 @@ function ServiceAdvisorManagement() {
               <thead>
                 <tr>
                   <th>Service adviser</th>
-                  <th>Sort order</th>
+                  <th>Branch</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -258,8 +323,24 @@ function ServiceAdvisorManagement() {
               <tbody>
                 {advisors.map((advisor) => (
                   <tr key={advisor._id}>
-                    <td><strong>{advisor.name}</strong></td>
-                    <td>{advisor.sortOrder ?? 0}</td>
+                    <td>
+                      <strong>{advisor.name}</strong>
+                    </td>
+
+                    <td>{getBranchName(advisor)}</td>
+
+                    <td>
+                      <span
+                        className={
+                          advisor.isActive === false
+                            ? "bs-advisor-status bs-advisor-status-inactive"
+                            : "bs-advisor-status bs-advisor-status-active"
+                        }
+                      >
+                        {advisor.isActive === false ? "Inactive" : "Active"}
+                      </span>
+                    </td>
+
                     <td>
                       <div className="bs-advisor-actions">
                         <button
@@ -270,13 +351,23 @@ function ServiceAdvisorManagement() {
                           Edit
                         </button>
 
-                        <button
-                          type="button"
-                          className="bs-advisor-deactivate"
-                          onClick={() => handleDeactivate(advisor)}
-                        >
-                          Deactivate
-                        </button>
+                        {advisor.isActive === false ? (
+                          <button
+                            type="button"
+                            className="bs-advisor-activate"
+                            onClick={() => handleActivate(advisor)}
+                          >
+                            Activate
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="bs-advisor-deactivate"
+                            onClick={() => handleDeactivate(advisor)}
+                          >
+                            Deactivate
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
