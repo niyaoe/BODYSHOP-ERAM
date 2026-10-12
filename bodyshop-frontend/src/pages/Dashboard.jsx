@@ -24,7 +24,7 @@ function Dashboard() {
   const [adminPanelOpen, setAdminPanelOpen] = useState(false);
 
   // UI-only state: does not change dashboard data or API behavior.
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [filtersVisible, setFiltersVisible] = useState(true);
   const [summaryVisible, setSummaryVisible] = useState(true);
 

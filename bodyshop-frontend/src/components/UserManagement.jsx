@@ -247,7 +247,7 @@ function UserManagement() {
               name="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="user@example.com"
+              placeholder="sneha@outlook.com"
               autoComplete="email"
               required
             />
