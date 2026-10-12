@@ -9,6 +9,13 @@ const serviceAdvisorSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+
+     branch: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Branch",
+      required: true,
+    },
+    
     isActive: {
       type: Boolean,
       default: true,

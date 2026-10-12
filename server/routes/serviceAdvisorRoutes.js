@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 
@@ -9,8 +8,7 @@ const {
 } = require("../controllers/serviceAdvisorController");
 
 const protect = require("../middleware/authMiddleware");
-const  authorize = require("../middleware/roleMiddleware");
-
+const authorize = require("../middleware/roleMiddleware");
 
 router.get("/", protect, getServiceAdvisors);
 
