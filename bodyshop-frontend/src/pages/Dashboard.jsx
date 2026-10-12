@@ -132,7 +132,11 @@ function Dashboard() {
     >
       <div className="bs-dashboard-workspace">
         <aside
-          className={`bs-dashboard-sidebar ${sidebarCollapsed ? "is-collapsed" : ""}`}
+          className={`bs-dashboard-sidebar ${
+            sidebarCollapsed ? "is-collapsed" : ""
+          }`}
+          onMouseEnter={() => setSidebarCollapsed(false)}
+          onMouseLeave={() => setSidebarCollapsed(true)}
         >
           <div className="bs-dashboard-brand">
             <div className="bs-dashboard-brand-mark">BS</div>
@@ -144,7 +148,7 @@ function Dashboard() {
             )}
           </div>
 
-          <button
+          {/* <button
             type="button"
             className={`bs-dashboard-sidebar-toggle ${
               sidebarCollapsed ? "is-collapsed" : ""
@@ -178,11 +182,11 @@ function Dashboard() {
                 Navigation
               </span>
             )}
-          </button>
+          </button> */}
 
-          <div className="bs-dashboard-nav-label">
+          {/* <div className="bs-dashboard-nav-label">
             {!sidebarCollapsed && "WORKSPACE"}
-          </div>
+          </div> */}
           <nav className="bs-dashboard-tabs" aria-label="Dashboard sections">
             {sections.map((section) => (
               <button
