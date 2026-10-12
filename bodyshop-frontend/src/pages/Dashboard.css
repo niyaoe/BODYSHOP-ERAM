@@ -491,6 +491,8 @@
   height: auto;
   object-fit: contain;
   animation: bs-loading-spin 2s linear infinite;
+  /* padding: 10px; */
+  border: #182230 1px solid;
 }
 
 .bs-table-loading-overlay p {

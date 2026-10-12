@@ -321,7 +321,14 @@ function FormModal({ isOpen, onClose, editRecord = null, onSuccess }) {
         {error && <div className="bs-form-modal-error">{error}</div>}
 
         {loadingData ? (
-          <div className="bs-form-modal-loading">Loading form...</div>
+          <div className="bs-form-modal-loading">
+            <img
+              src="/loading.png"
+              alt="Loading..."
+              className="bs-loading-spinner"
+            />
+            {/* <p>Loading form...</p> */}
+          </div>
         ) : (
           <>
             <form
