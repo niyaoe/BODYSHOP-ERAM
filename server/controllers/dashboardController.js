@@ -91,6 +91,9 @@ const getDashboard = async (req, res) => {
       ];
     }
 
+    // Keep branch, date and search filters for section summaries
+    const summaryFilter = { ...filter };
+
     // ----------------------------------
     // Status section filter
     // ----------------------------------
@@ -132,6 +135,168 @@ const getDashboard = async (req, res) => {
     const totalRecords = await FormRecord.countDocuments(filter);
 
     // ----------------------------------
+    // Open section status summary
+    // ----------------------------------
+
+    const openStatuses = await Status.find({
+      section: "open",
+      isActive: true,
+    }).select("_id name");
+
+    const openStatusIds = openStatuses.map((status) => status._id);
+
+    const openSummaryStats = await FormRecord.aggregate([
+      {
+        $match: {
+          ...summaryFilter,
+          presentStatus: { $in: openStatusIds },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+
+          totalOpenRecords: { $sum: 1 },
+
+          totalLabourEstimate: {
+            $sum: { $ifNull: ["$labourEstimate", 0] },
+          },
+
+          totalPartsEstimate: {
+            $sum: { $ifNull: ["$partsEstimate", 0] },
+          },
+        },
+      },
+    ]);
+
+    const openStatusCounts = await FormRecord.aggregate([
+      {
+        $match: {
+          ...summaryFilter,
+          presentStatus: { $in: openStatusIds },
+        },
+      },
+      {
+        $group: {
+          _id: "$presentStatus",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const countByStatusId = new Map(
+      openStatusCounts.map((item) => [item._id.toString(), item.count]),
+    );
+
+    const openStats = openSummaryStats[0] || {
+      totalOpenRecords: 0,
+      totalLabourEstimate: 0,
+      totalPartsEstimate: 0,
+    };
+
+    const openStatusSummary = {
+      totalOpenRecords: openStats.totalOpenRecords,
+      totalLabourEstimate: openStats.totalLabourEstimate,
+      totalPartsEstimate: openStats.totalPartsEstimate,
+
+      statuses: openStatuses.map((status) => ({
+        name: status.name,
+        count: countByStatusId.get(status._id.toString()) || 0,
+      })),
+    };
+
+    // ----------------------------------
+    // Billed section summary
+    // ----------------------------------
+
+    const billedStatuses = await Status.find({
+      section: "billed",
+      isActive: true,
+    }).select("_id");
+
+    const billedStatusIds = billedStatuses.map((status) => status._id);
+
+    const billedSummaryStats = await FormRecord.aggregate([
+      {
+        $match: {
+          ...summaryFilter,
+          presentStatus: { $in: billedStatusIds },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+
+          totalBilledRecords: { $sum: 1 },
+
+          totalLabourBill: {
+            $sum: { $ifNull: ["$labourBillAmount", 0] },
+          },
+
+          totalPartsBill: {
+            $sum: { $ifNull: ["$partsBillAmount", 0] },
+          },
+        },
+      },
+    ]);
+
+    const billedStats = billedSummaryStats[0] || {
+      totalBilledRecords: 0,
+      totalLabourBill: 0,
+      totalPartsBill: 0,
+    };
+
+    const billedStatusSummary = {
+      totalBilledRecords: billedStats.totalBilledRecords,
+      totalLabourBill: billedStats.totalLabourBill,
+      totalPartsBill: billedStats.totalPartsBill,
+    };
+
+    // ----------------------------------
+    // Legal / Loss section summary
+    // ----------------------------------
+
+    const legalLossStatuses = await Status.find({
+      section: "legalLoss",
+      isActive: true,
+    }).select("_id");
+
+    const legalLossStatusIds = legalLossStatuses.map((status) => status._id);
+
+    const legalLossSummaryStats = await FormRecord.aggregate([
+      {
+        $match: {
+          ...summaryFilter,
+          presentStatus: { $in: legalLossStatusIds },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalLegalLossRecords: { $sum: 1 },
+          totalLabourEstimate: {
+            $sum: { $ifNull: ["$labourEstimate", 0] },
+          },
+          totalPartsEstimate: {
+            $sum: { $ifNull: ["$partsEstimate", 0] },
+          },
+        },
+      },
+    ]);
+
+    const legalLossStats = legalLossSummaryStats[0] || {
+      totalLegalLossRecords: 0,
+      totalLabourEstimate: 0,
+      totalPartsEstimate: 0,
+    };
+
+    const legalLossSummary = {
+      totalLegalLossRecords: legalLossStats.totalLegalLossRecords,
+      totalLabourEstimate: legalLossStats.totalLabourEstimate,
+      totalPartsEstimate: legalLossStats.totalPartsEstimate,
+    };
+
+    // ----------------------------------
     // Records
     // ----------------------------------
 
@@ -155,12 +320,33 @@ const getDashboard = async (req, res) => {
       ]),
     );
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     records = records.map((record) => {
       const item = record.toObject();
 
       item.subSegmentName = (
         modelMap.get(item.model?.trim().toLowerCase()) || ""
       ).toUpperCase();
+
+      const promiseDate = item.promisedDeliveryDate
+        ? new Date(item.promisedDeliveryDate)
+        : null;
+
+      if (promiseDate) {
+        promiseDate.setHours(0, 0, 0, 0);
+
+        const daysOverdue = Math.floor(
+          (today.getTime() - promiseDate.getTime()) / (1000 * 60 * 60 * 24),
+        );
+
+        item.isDeliveryOverdue = daysOverdue >= 4;
+        item.deliveryDaysOverdue = daysOverdue;
+      } else {
+        item.isDeliveryOverdue = false;
+        item.deliveryDaysOverdue = 0;
+      }
 
       return item;
     });
@@ -383,6 +569,9 @@ const getDashboard = async (req, res) => {
         totalPartsBill: summary.totalPartsBill,
         ...adminStats,
       },
+      openStatusSummary,
+      billedStatusSummary,
+      legalLossSummary,
 
       statistics: {
         jobType: jobTypeStats,
